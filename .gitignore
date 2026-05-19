@@ -1,0 +1,15 @@
+setup.sh
+# Katalogi z wynikami kompilacji
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Pliki specyficzne dla użytkownika
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
