@@ -1,0 +1,105 @@
+@model List<DietPlaner.Models.WardSummaryViewModel>
+
+@{
+    ViewData["Title"] = "Ward Overview";
+    int totalPatients = (int)ViewBag.TotalPatients;
+}
+
+<h1>Ward Overview</h1>
+<p class="text-muted">Patient and diet statistics broken down by hospital ward.</p>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h2>@totalPatients</h2>
+                <p class="mb-0">Total Patients</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h2>@(ViewBag.TotalWards)</h2>
+                <p class="mb-0">Active Wards</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h2>@Model.Sum(w => w.PatientsWithDiet)</h2>
+                <p class="mb-0">Patients with Diet</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h2>@Model.Sum(w => w.PatientsWithoutDiet)</h2>
+                <p class="mb-0">Without Diet</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach (var item in Model)
+{
+    double pct = item.TotalPatients > 0 ? (item.PatientsWithDiet * 100.0 / item.TotalPatients) : 0;
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                @item.Ward.Name
+                <span class="badge bg-secondary ms-2">Floor @item.Ward.Floor</span>
+            </h5>
+            <span class="badge bg-primary fs-6">@item.TotalPatients patients</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Diet coverage</strong></p>
+                    <div class="progress mb-2" style="height: 22px;">
+                        <div class="progress-bar bg-success" style="width: @pct.ToString("F0")%">
+                            @item.PatientsWithDiet with diet
+                        </div>
+                        @if (item.PatientsWithoutDiet > 0)
+                        {
+                            <div class="progress-bar bg-danger" style="width: @((100 - pct).ToString("F0"))%">
+                                @item.PatientsWithoutDiet unassigned
+                            </div>
+                        }
+                    </div>
+                    <small class="text-muted">
+                        Average caloric intake:
+                        <strong>@(item.AverageKcal > 0 ? item.AverageKcal.ToString("F0") + " kcal" : "—")</strong>
+                    </small>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Diet breakdown</strong></p>
+                    @if (item.DietBreakdown.Any())
+                    {
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var diet in item.DietBreakdown)
+                            {
+                                <li>
+                                    <span class="badge bg-info text-dark me-1">@diet.Count</span>
+                                    @diet.DietName
+                                    <small class="text-muted">(@diet.Kcal kcal)</small>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No diets assigned on this ward.</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No wards found. <a asp-controller="Ward" asp-action="Create">Add a ward</a>.</div>
+}

@@ -2,15 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DietPlaner.Models;
 
-public class Diet
+public class Ward
 {
     [Key]
     public int Id { get; set; }
-    [Display(Name = "Name")]
+    [Display(Name = "Ward Name")]
     public required string Name { get; set; }
-    [Display(Name = "kcal")]
-    public int Kcal { get; set; }
-    [Display(Name = "Diet Type")]
-    public DietType DietType { get; set; }
+    [Display(Name = "Floor")]
+    public int Floor { get; set; }
     public ICollection<Patient>? Patients { get; set; }
 }

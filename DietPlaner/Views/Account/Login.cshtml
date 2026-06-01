@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - DietPlaner</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h2 class="mb-4 text-center">DietPlaner Login</h2>
+            @if (ViewData["Error"] != null)
+            {
+                <div class="alert alert-danger">@ViewData["Error"]</div>
+            }
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group mb-3">
+                    <label for="loginName">Login</label>
+                    <input type="text" id="loginName" name="loginName" class="form-control" required autofocus />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

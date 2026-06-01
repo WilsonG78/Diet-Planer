@@ -1,0 +1,55 @@
+@model DietPlaner.Models.Patient
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Patient</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pesel" class="control-label"></label>
+                <input asp-for="Pesel" class="form-control" />
+                <span asp-validation-for="Pesel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DietId" class="control-label">Diet</label>
+                <select asp-for="DietId" class="form-control" asp-items="ViewBag.DietId">
+                    <option value="">-- No diet assigned --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="WardId" class="control-label">Ward</label>
+                <select asp-for="WardId" class="form-control" asp-items="ViewBag.WardId">
+                    <option value="">-- No ward assigned --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

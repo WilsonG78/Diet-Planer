@@ -4,7 +4,7 @@ using DietPlaner.Models;
 
 namespace DietPlaner.Controllers;
 
-public class HomeController : Controller
+public class HomeController : AuthenticatedController
 {
     public IActionResult Index()
     {

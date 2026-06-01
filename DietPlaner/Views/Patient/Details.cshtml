@@ -1,0 +1,49 @@
+@model DietPlaner.Models.Patient
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+
+<h1>Patient Details</h1>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Name)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(m => m.Name)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Surname)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(m => m.Surname)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Pesel)</dt>
+    <dd class="col-sm-10"><code>@Html.DisplayFor(m => m.Pesel)</code></dd>
+
+    <dt class="col-sm-2">Diet</dt>
+    <dd class="col-sm-10">
+        @if (Model.Diet != null)
+        {
+            <span class="badge bg-info text-dark">@Model.Diet.Name</span>
+            <small class="text-muted ms-2">@Model.Diet.Kcal kcal &mdash; @Model.Diet.DietType</small>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark">Not assigned</span>
+        }
+    </dd>
+
+    <dt class="col-sm-2">Ward</dt>
+    <dd class="col-sm-10">
+        @if (Model.Ward != null)
+        {
+            <span class="badge bg-secondary">@Model.Ward.Name</span>
+            <small class="text-muted ms-2">Floor @Model.Ward.Floor</small>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark">Not assigned</span>
+        }
+    </dd>
+</dl>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

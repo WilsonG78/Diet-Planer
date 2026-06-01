@@ -1,0 +1,101 @@
+@model List<DietPlaner.Models.DietSummaryViewModel>
+
+@{
+    ViewData["Title"] = "Diet Distribution";
+    int totalPatients = (int)ViewBag.TotalPatients;
+    int unassigned = (int)ViewBag.UnassignedCount;
+    int assigned = totalPatients - unassigned;
+}
+
+<h1>Diet Distribution</h1>
+<p class="text-muted">Overview of how many patients are on each diet, across all wards.</p>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h2>@totalPatients</h2>
+                <p class="mb-0">Total Patients</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h2>@assigned</h2>
+                <p class="mb-0">On a Diet</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body text-center">
+                <h2>@unassigned</h2>
+                <p class="mb-0">No Diet Assigned</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Diet</th>
+            <th>Type</th>
+            <th>Kcal</th>
+            <th>Patients</th>
+            <th style="width:25%">Share of all patients</th>
+            <th>Wards</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            double pct = totalPatients > 0 ? (item.PatientCount * 100.0 / totalPatients) : 0;
+            <tr>
+                <td><strong>@item.Diet.Name</strong></td>
+                <td>
+                    <span class="badge @(item.Diet.DietType.ToString() == "vegetarian" ? "bg-success" : "bg-warning text-dark")">
+                        @item.Diet.DietType
+                    </span>
+                </td>
+                <td>@item.Diet.Kcal kcal</td>
+                <td><span class="badge bg-primary fs-6">@item.PatientCount</span></td>
+                <td>
+                    <div class="progress" style="height:18px;">
+                        <div class="progress-bar" style="width:@pct.ToString("F0")%">@pct.ToString("F1")%</div>
+                    </div>
+                </td>
+                <td>
+                    @if (item.ByWard.Any())
+                    {
+                        @foreach (var w in item.ByWard)
+                        {
+                            <span class="badge bg-secondary me-1">@w.WardName: @w.Count</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                </td>
+            </tr>
+        }
+        @if (unassigned > 0)
+        {
+            double pct = totalPatients > 0 ? (unassigned * 100.0 / totalPatients) : 0;
+            <tr class="table-warning">
+                <td><em>No diet assigned</em></td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge bg-warning text-dark fs-6">@unassigned</span></td>
+                <td>
+                    <div class="progress" style="height:18px;">
+                        <div class="progress-bar bg-warning text-dark" style="width:@pct.ToString("F0")%">@pct.ToString("F1")%</div>
+                    </div>
+                </td>
+                <td><a asp-controller="Reports" asp-action="Unassigned" class="btn btn-sm btn-outline-warning">View patients</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

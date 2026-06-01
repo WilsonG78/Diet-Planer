@@ -1,0 +1,43 @@
+@model DietPlaner.Models.Ward
+
+@{
+    ViewData["Title"] = "Ward Details";
+}
+
+<h1>Ward Details</h1>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Floor)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Floor)</dd>
+</dl>
+
+<h4>Patients in this ward</h4>
+@if (Model.Patients != null && Model.Patients.Any())
+{
+    <table class="table">
+        <thead>
+            <tr><th>Name</th><th>Surname</th><th>PESEL</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Patients)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Surname</td>
+                    <td>@p.Pesel</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No patients assigned to this ward.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

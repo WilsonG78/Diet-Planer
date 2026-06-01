@@ -1,0 +1,111 @@
+@model List<DietPlaner.Models.Patient>
+
+@{
+    ViewData["Title"] = "Unassigned Patients";
+    int noDiet = (int)ViewBag.NoDiet;
+    int noWard = (int)ViewBag.NoWard;
+    int bothMissing = (int)ViewBag.BothMissing;
+}
+
+<h1>Unassigned Patients</h1>
+<p class="text-muted">Patients missing a diet assignment, a ward assignment, or both.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-success">
+        <strong>All patients are fully assigned!</strong> Every patient has both a diet and a ward.
+    </div>
+}
+else
+{
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-danger">
+                <div class="card-body text-center">
+                    <h3 class="text-danger">@noDiet</h3>
+                    <p class="mb-0">Without diet</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <h3 class="text-warning">@noWard</h3>
+                    <p class="mb-0">Without ward</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-dark">
+                <div class="card-body text-center">
+                    <h3>@bothMissing</h3>
+                    <p class="mb-0">Missing both</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>PESEL</th>
+                <th>Diet</th>
+                <th>Ward</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                bool missingDiet = p.DietId == null;
+                bool missingWard = p.WardId == null;
+                <tr class="@(missingDiet && missingWard ? "table-danger" : "table-warning")">
+                    <td>@p.Name</td>
+                    <td>@p.Surname</td>
+                    <td><code>@p.Pesel</code></td>
+                    <td>
+                        @if (missingDiet)
+                        {
+                            <span class="badge bg-danger">Not assigned</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">@p.Diet!.Name</span>
+                        }
+                    </td>
+                    <td>
+                        @if (missingWard)
+                        {
+                            <span class="badge bg-danger">Not assigned</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">@p.Ward!.Name</span>
+                        }
+                    </td>
+                    <td>
+                        @if (missingDiet && missingWard)
+                        {
+                            <span class="badge bg-danger">Both missing</span>
+                        }
+                        else if (missingDiet)
+                        {
+                            <span class="badge bg-warning text-dark">No diet</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">No ward</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Patient" asp-action="Edit" asp-route-id="@p.Id"
+                           class="btn btn-sm btn-outline-primary">Assign</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
